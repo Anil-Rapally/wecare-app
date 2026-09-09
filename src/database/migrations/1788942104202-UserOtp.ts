@@ -1,33 +1,91 @@
-import type { MigrationInterface, QueryRunner } from 'typeorm';
+import { Table, TableForeignKey, type MigrationInterface, type QueryRunner } from 'typeorm';
 
 export class UserOtp1788942104202 implements MigrationInterface {
   name = 'UserOtp1788942104202';
-
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const hasOtps = await queryRunner.hasTable('email_otps');
-    if (hasOtps) {
-      throw new Error(
-        'Existing email_otps table has no recognized migration history. Use a fresh database or review its migration history.',
-      );
-    }
-
-    await queryRunner.query(`CREATE TABLE email_otps (
-      user_id varchar(36) NOT NULL,
-      otpid varchar(36) NULL,
-      code_hash varchar(64) NULL,
-      expires_at datetime(3) NULL,
-      last_sent_at datetime(3) NULL,
-      send_window_started_at datetime(3) NULL,
-      send_count int unsigned NOT NULL DEFAULT 0,
-      failure_window_started_at datetime(3) NULL,
-      failed_attempts int unsigned NOT NULL DEFAULT 0,
-      locked_until datetime(3) NULL,
-      PRIMARY KEY (user_id),
-      CONSTRAINT FK_email_otps_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
+    await queryRunner.createTable(
+      new Table({
+        name: 'email_otps',
+        columns: [
+          {
+            name: 'user_id',
+            type: 'varchar',
+            length: '36',
+            isPrimary: true,
+            isNullable: false,
+          },
+          {
+            name: 'otpid',
+            type: 'varchar',
+            length: '36',
+            isNullable: true,
+          },
+          {
+            name: 'code_hash',
+            type: 'varchar',
+            length: '64',
+            isNullable: true,
+          },
+          {
+            name: 'expires_at',
+            type: 'datetime',
+            precision: 3,
+            isNullable: true,
+          },
+          {
+            name: 'last_sent_at',
+            type: 'datetime',
+            precision: 3,
+            isNullable: true,
+          },
+          {
+            name: 'send_window_started_at',
+            type: 'datetime',
+            precision: 3,
+            isNullable: true,
+          },
+          {
+            name: 'send_count',
+            type: 'int',
+            unsigned: true,
+            isNullable: false,
+            default: '0',
+          },
+          {
+            name: 'failure_window_started_at',
+            type: 'datetime',
+            precision: 3,
+            isNullable: true,
+          },
+          {
+            name: 'failed_attempts',
+            type: 'int',
+            unsigned: true,
+            isNullable: false,
+            default: '0',
+          },
+          {
+            name: 'locked_until',
+            type: 'datetime',
+            precision: 3,
+            isNullable: true,
+          },
+        ],
+        foreignKeys: [
+          new TableForeignKey({
+            name: 'FK_email_otps_user',
+            columnNames: ['user_id'],
+            referencedTableName: 'users',
+            referencedColumnNames: ['id'],
+            onDelete: 'CASCADE',
+          }),
+        ],
+      }),
+      true, // ifNotExists: true
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('DROP TABLE IF EXISTS email_otps');
+    await queryRunner.dropTable('email_otps');
   }
 }

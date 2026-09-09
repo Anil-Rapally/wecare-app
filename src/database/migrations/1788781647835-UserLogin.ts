@@ -1,4 +1,4 @@
-import type { MigrationInterface, QueryRunner } from 'typeorm';
+import { Table, TableUnique, type MigrationInterface, type QueryRunner } from 'typeorm';
 
 export class UserLogin1788781647835 implements MigrationInterface {
   name = 'UserLogin1788781647835';
@@ -10,28 +10,110 @@ export class UserLogin1788781647835 implements MigrationInterface {
         'Existing users table has no recognized migration history. Use a fresh database or review its migration history.',
       );
     }
-
-    await queryRunner.query(`CREATE TABLE users (
-      id varchar(36) NOT NULL,
-      email varchar(254) NOT NULL,
-      is_email_verified tinyint NOT NULL DEFAULT 0,
-      is_profile_exists tinyint NOT NULL DEFAULT 0,
-      full_name varchar(100) NULL,
-      date_of_birth date NULL,
-      gender enum('male','female','other','prefer_not_to_say') NULL,
-      blood_group enum('A+','A-','B+','B-','AB+','AB-','O+','O-','unknown') NULL,
-      emergency_contact varchar(16) NULL,
-      address varchar(500) NULL,
-      profile_photo_url varchar(100) NULL,
-      profile_photo mediumblob NULL,
-      created_at datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-      updated_at datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-      PRIMARY KEY (id),
-      UNIQUE KEY UQ_users_email (email)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
+    else {
+      await queryRunner.createTable(
+        new Table({
+          name: 'users',
+          columns: [
+            {
+              name: 'id',
+              type: 'varchar',
+              length: '36',
+              isPrimary: true,
+              isNullable: false,
+            },
+            {
+              name: 'email',
+              type: 'varchar',
+              length: '254',
+              isNullable: false,
+            },
+            {
+              name: 'is_email_verified',
+              type: 'tinyint',
+              isNullable: false,
+              default: '0',
+            },
+            {
+              name: 'is_profile_exists',
+              type: 'tinyint',
+              isNullable: false,
+              default: '0',
+            },
+            {
+              name: 'full_name',
+              type: 'varchar',
+              length: '100',
+              isNullable: true,
+            },
+            {
+              name: 'date_of_birth',
+              type: 'date',
+              isNullable: true,
+            },
+            {
+              name: 'gender',
+              type: 'enum',
+              enum: ['male', 'female', 'other', 'prefer_not_to_say'],
+              isNullable: true,
+            },
+            {
+              name: 'blood_group',
+              type: 'enum',
+              enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'unknown'],
+              isNullable: true,
+            },
+            {
+              name: 'emergency_contact',
+              type: 'varchar',
+              length: '16',
+              isNullable: true,
+            },
+            {
+              name: 'address',
+              type: 'varchar',
+              length: '500',
+              isNullable: true,
+            },
+            {
+              name: 'profile_photo_url',
+              type: 'varchar',
+              length: '100',
+              isNullable: true,
+            },
+            {
+              name: 'profile_photo',
+              type: 'mediumblob',
+              isNullable: true,
+            },
+            {
+              name: 'created_at',
+              type: 'datetime',
+              precision: 3,
+              isNullable: false,
+              default: 'CURRENT_TIMESTAMP(3)',
+            },
+            {
+              name: 'updated_at',
+              type: 'datetime',
+              precision: 3,
+              isNullable: false,
+              default: 'CURRENT_TIMESTAMP(3)',
+              onUpdate: 'CURRENT_TIMESTAMP(3)',
+            },
+          ],
+          uniques: [
+            new TableUnique({
+              name: 'UQ_users_email',
+              columnNames: ['email'],
+            }),
+          ],
+        }),
+        true, // ifNotExists: true
+      );
+    }
   }
-
-  async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('DROP TABLE IF EXISTS users');
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable('users');
   }
 }
