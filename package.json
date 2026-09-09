@@ -9,6 +9,8 @@
     "build": "nest build",
     "migration:run": "npm run build && typeorm migration:run -d dist/database/data-source.js",
     "migration:revert": "npm run build && typeorm migration:revert -d dist/database/data-source.js",
+    "migration:generate": "npm run build && typeorm migration:generate -d dist/database/data-source.js",
+    "migration:create": "typeorm migration:create",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -19,7 +21,14 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "commit": "cz",
+    "prepare": "husky"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -42,6 +51,8 @@
     "typeorm": "^1.1.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
@@ -52,10 +63,13 @@
     "@types/multer": "^2.2.0",
     "@types/node": "^24.0.0",
     "@types/supertest": "^7.0.0",
+    "commitizen": "^4.3.2",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^17.0.0",
+    "husky": "^9.1.7",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
     "source-map-support": "^0.5.21",

@@ -1,6 +1,8 @@
 import type { DataSourceOptions } from 'typeorm';
-import { User, EmailOtp } from '../entity/user.entity';
-import { Userlogin1788781647835 } from '../database/migrations/1788781647835-Userlogin';
+import { User } from '../../user/entity/user.entity';
+import { EmailOtp } from '../../user/entity/email-otp.entity';
+import { UserLogin1788781647835 } from '../../database/migrations/1788781647835-UserLogin';
+import { UserOtp1788942104202 } from '../../database/migrations/1788942104202-UserOtp';
 
 export function validateEnvironment(environment: Record<string, unknown>): Record<string, unknown> {
   const result = {
@@ -22,7 +24,7 @@ export function validateEnvironment(environment: Record<string, unknown>): Recor
     'SMTP_PASSWORD',
     'SMTP_FROM',
   ]) {
-    if (typeof result[key] !== 'string' || !(result[key] as string).trim()) {
+    if (typeof result[key] !== 'string' || !result[key].trim()) {
       throw new Error(`Set ${key} in .env before starting the API.`);
     }
   }
@@ -66,7 +68,7 @@ export function databaseOptions(): DataSourceOptions {
     charset: 'utf8mb4_unicode_ci',
     timezone: 'Z',
     entities: [User, EmailOtp],
-    migrations: [Userlogin1788781647835],
+    migrations: [UserLogin1788781647835, UserOtp1788942104202],
     migrationsTableName: 'migrations',
     synchronize: false,
     migrationsRun: false,

@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { validateEnvironment } from './config/config';
-import { databaseOptions } from './config/config';
+import { validateEnvironment, databaseOptions } from './common/config/environment.config';
 import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';

@@ -1,29 +1,13 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Userlogin1788781647835 implements MigrationInterface {
-  name = 'Userlogin1788781647835';
+export class UserLogin1788781647835 implements MigrationInterface {
+  name = 'UserLogin1788781647835';
 
   async up(queryRunner: QueryRunner): Promise<void> {
     const hasUsers = await queryRunner.hasTable('users');
-    const hasOtps = await queryRunner.hasTable('email_otps');
-    const upgradingPreviousProject = await this.previousMigrationApplied(queryRunner);
-
-    if (upgradingPreviousProject) {
-      if (!hasUsers || !hasOtps) {
-        throw new Error('The previous migration is recorded, but its tables are missing.');
-      }
-      if (await queryRunner.hasColumn('email_otps', 'otpid')) return;
-      // The old column name appears only in this compatibility migration.
-      if (!(await queryRunner.hasColumn('email_otps', 'challenge_id'))) {
-        throw new Error('The previous OTP column is missing; inspect the database schema.');
-      }
-      await queryRunner.renameColumn('email_otps', 'challenge_id', 'otpid');
-      return;
-    }
-
-    if (hasUsers || hasOtps) {
+    if (hasUsers) {
       throw new Error(
-        'Existing user tables have no recognized migration history. Use a fresh database or review its migration history.',
+        'Existing users table has no recognized migration history. Use a fresh database or review its migration history.',
       );
     }
 
@@ -45,39 +29,9 @@ export class Userlogin1788781647835 implements MigrationInterface {
       PRIMARY KEY (id),
       UNIQUE KEY UQ_users_email (email)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
-
-    await queryRunner.query(`CREATE TABLE email_otps (
-      user_id varchar(36) NOT NULL,
-      otpid varchar(36) NULL,
-      code_hash varchar(64) NULL,
-      expires_at datetime(3) NULL,
-      last_sent_at datetime(3) NULL,
-      send_window_started_at datetime(3) NULL,
-      send_count int unsigned NOT NULL DEFAULT 0,
-      failure_window_started_at datetime(3) NULL,
-      failed_attempts int unsigned NOT NULL DEFAULT 0,
-      locked_until datetime(3) NULL,
-      PRIMARY KEY (user_id),
-      CONSTRAINT FK_email_otps_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
   }
 
   async down(queryRunner: QueryRunner): Promise<void> {
-    if (await this.previousMigrationApplied(queryRunner)) {
-      // Restore compatibility with the previous app while preserving its data.
-      await queryRunner.renameColumn('email_otps', 'otpid', 'challenge_id');
-      return;
-    }
-    // Reverting a fresh installation removes the tables and their data.
-    await queryRunner.query('DROP TABLE email_otps');
-    await queryRunner.query('DROP TABLE users');
-  }
-
-  private async previousMigrationApplied(queryRunner: QueryRunner): Promise<boolean> {
-    if (!(await queryRunner.hasTable('migrations'))) return false;
-    const rows: unknown = await queryRunner.query('SELECT name FROM migrations WHERE name = ?', [
-      'InitialEmailAuth1788739200000',
-    ]);
-    return Array.isArray(rows) && rows.length > 0;
+    await queryRunner.query('DROP TABLE IF EXISTS users');
   }
 }

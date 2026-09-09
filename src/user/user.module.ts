@@ -1,19 +1,16 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TokenGuard } from '../guards/token.guard';
-import { TokenService } from '../guards/token.guard';
-import { EmailOtp } from '../entity/user.entity';
-import { MailService } from '../mail/mail.service';
-import { PhotoService } from '../photo/photo.services';
+import { AuthModule } from '../auth/auth.module';
+import { MailService } from './mail/mail.service';
+import { EmailOtp } from './entity/email-otp.entity';
+import { PhotoService } from './photo/photo.service';
 import { UserController } from './user.controller';
-import { User } from '../entity/user.entity';
+import { User } from './entity/user.entity';
 import { UserService } from './user.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, EmailOtp]), JwtModule.register({})],
+  imports: [TypeOrmModule.forFeature([User, EmailOtp]), AuthModule],
   controllers: [UserController],
-  providers: [UserService, MailService, PhotoService, TokenService, TokenGuard],
-  exports: [TokenGuard, TokenService],
+  providers: [UserService, MailService, PhotoService],
 })
 export class UserModule {}
