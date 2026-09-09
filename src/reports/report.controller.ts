@@ -2,22 +2,29 @@ import {
   Body,
   Controller,
   Get,
+  Query,
   Post,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadReportDto } from './dto/upload-report.dto';
 
 import { ReportService } from './report.service';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Controller('reports')
 export class ReportController {
   constructor(private reportService: ReportService) {}
 
-  @Get()
-  getReports() {
-    return this.reportService.findAll();
-  }
+ @Get()
+  getReports(@Query() pagination: PaginationDto) {
+  return this.reportService.findAll(
+    pagination.page,
+    pagination.limit,
+    pagination.search,
+  );
+}
 
   @Post()
   @UseInterceptors(
@@ -39,12 +46,12 @@ export class ReportController {
       },
     }),
   )
-  uploadReport(@UploadedFile() file: any, @Body() body: any) {
+  uploadReport(@UploadedFile() file: any, @Body() body: UploadReportDto) {
     return this.reportService.saveReport(
       {
         report_name: body.report_name,
         report_type: body.report_type,
-        report_date: body.report_date,
+        report_date: new Date(body.report_date),
         hospital_or_diagnostic_center: body.hospital_or_diagnostic_center,
         doctor_name: body.doctor_name,
         tags: body.tags,
@@ -53,7 +60,7 @@ export class ReportController {
         file_size: file.size,
         file_data: file.buffer,
       },
-      body.collection_id ? Number(body.collection_id) : undefined,
+      body.collection_id,
       body.new_collection_name,
     );
   }
