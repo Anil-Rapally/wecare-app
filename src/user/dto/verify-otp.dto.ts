@@ -3,7 +3,7 @@ import { LoginDto } from './login.dto';
 
 export class VerifyOtpDto extends LoginDto {
   @IsUUID('4')
-  otpid!: string;
+  otpId!: string;
 
   @IsString()
   @Matches(/^\d{4}$/)

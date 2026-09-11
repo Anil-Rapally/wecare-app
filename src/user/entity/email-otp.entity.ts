@@ -10,8 +10,8 @@ export class EmailOtp {
   @JoinColumn({ name: 'user_id', foreignKeyConstraintName: 'FK_email_otps_user' })
   user!: User;
 
-  @Column({ type: 'varchar', length: 36, nullable: true })
-  otpid: string | null = null;
+  @Column({ name: 'otpid', type: 'varchar', length: 36, nullable: true })
+  otpId: string | null = null;
 
   @Column({ name: 'code_hash', type: 'varchar', length: 64, nullable: true })
   codeHash: string | null = null;

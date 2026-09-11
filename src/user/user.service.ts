@@ -70,7 +70,7 @@ export class UserService {
     } catch {
       // A failed older delivery must not invalidate a newer resend.
       await this.otps.update(
-        { userId: pending.userId, otpid: pending.otpid },
+        { userId: pending.userId, otpId: pending.otpId },
         { codeHash: null, expiresAt: null },
       );
       throw new ServiceUnavailableException({
@@ -82,7 +82,7 @@ export class UserService {
     // Do not disclose account/profile existence to someone who only knows an email.
     return {
       message: this.i18n.t('validation.OTP_SENT'),
-      otpid: pending.otpid,
+      otpId: pending.otpId,
       expiresIn: OTP_TTL_SECONDS,
       resendAfter: OTP_MIN_DELAY_SECONDS,
       nextStep: 'verify_otp' as const,
@@ -109,7 +109,7 @@ export class UserService {
       const verified = checkOtp(
         state,
         this.config.getOrThrow<string>('OTP_HMAC_SECRET'),
-        dto.otpid,
+        dto.otpId,
         dto.otp,
       );
 

@@ -44,7 +44,7 @@ export function issueOtp(
   state: EmailOtp,
   secret: string,
   now = Date.now(),
-): OtpFailure | { ok: true; otp: string; otpid: string } {
+): OtpFailure | { ok: true; otp: string; otpId: string } {
   if (state.lockedUntil && state.lockedUntil.getTime() > now) {
     return blocked(state.lockedUntil, now);
   }
@@ -81,14 +81,14 @@ export function issueOtp(
     }
   }
   const otp = randomInt(0, 10_000).toString().padStart(4, '0');
-  const otpid = randomUUID();
-  state.otpid = otpid;
-  state.codeHash = hashOtp(secret, state.userId, otpid, otp);
+  const otpId = randomUUID();
+  state.otpId = otpId;
+  state.codeHash = hashOtp(secret, state.userId, otpId, otp);
   state.expiresAt = new Date(now + OTP_TTL_SECONDS * 1000);
   state.lastSentAt = new Date(now);
   state.sendCount += 1;
   // Resending must not grant another five guesses.
-  return { ok: true, otp, otpid };
+  return { ok: true, otp, otpId };
 }
 
 export function checkOtp(
@@ -112,7 +112,7 @@ export function checkOtp(
     !state.codeHash ||
     !state.expiresAt ||
     state.expiresAt.getTime() <= now ||
-    state.otpid !== otpId
+    state.otpId !== otpId
   )
     return invalid;
 
