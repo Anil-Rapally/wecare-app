@@ -13,11 +13,14 @@ import { UploadReportDto } from './dto/upload-report.dto';
 import { ReportService } from './report.service';
 import { PaginationDto } from './dto/pagination.dto';
 
+import { ResponseMessage } from '../interceptors/response.interceptor';
+
 @Controller('reports')
 export class ReportController {
   constructor(private reportService: ReportService) {}
 
  @Get()
+ @ResponseMessage('Reports fetched successfully')
   getReports(@Query() pagination: PaginationDto) {
   return this.reportService.findAll(
     pagination.page,
@@ -27,6 +30,7 @@ export class ReportController {
 }
 
   @Post()
+  @ResponseMessage('Report uploaded successfully')
   @UseInterceptors(
     FileInterceptor('file', {
       limits: {
