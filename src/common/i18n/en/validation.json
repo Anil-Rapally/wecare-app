@@ -1,0 +1,11 @@
+{
+    "EMAIL_REQUIRED": "Please enter your email address",
+    "EMAIL_INVALID": "Please enter a valid email address",
+    "ENTER_NAME": "Please enter your name",
+    "SELECT_DOB": "Select date of birth",
+    "SELECT_GENDER": "Select your gender",
+    "SELECT_BLOOD_GROUP": "Select blood group",
+    "ENTER_EMERGENCY_CONTACT": "Please enter emergency contact number",
+    "UPLOAD_PHOTO_SIZE": "Upload an image no larger than 2 MiB.",
+    "UPLOAD_PHOTO_FORMAT": "Upload a valid, non-animated JPEG, PNG, or WebP image (maximum 16 megapixels)."
+}

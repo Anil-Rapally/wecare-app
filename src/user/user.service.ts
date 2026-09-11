@@ -22,7 +22,7 @@ import type { OtpFailure } from './otp/otp.types';
 import { OTP_MIN_DELAY_SECONDS, OTP_TTL_SECONDS } from './otp/otp.types';
 import { PhotoService } from './photo/photo.service';
 import { User } from './entity/user.entity';
-import { i18nValidationMessage, I18nService } from 'nestjs-i18n';
+
 
 @Injectable()
 export class UserService {
@@ -34,7 +34,6 @@ export class UserService {
     private readonly mail: MailService,
     private readonly authService: AuthService,
     private readonly photos: PhotoService,
-    private readonly i18n: I18nService,
   ) { }
 
   async login(dto: LoginDto) {
@@ -75,13 +74,13 @@ export class UserService {
       );
       throw new ServiceUnavailableException({
         code: 'OTP_SEND_FAILED',
-        message: this.i18n.t('validation.OTP_FAILED'),
+        message: "Failed to send OTP. Please try again later.",
         retryAfter: OTP_MIN_DELAY_SECONDS,
       });
     }
     // Do not disclose account/profile existence to someone who only knows an email.
     return {
-      message: this.i18n.t('validation.OTP_SENT'),
+      message: 'OTP sent to your email.',
       otpId: pending.otpId,
       expiresIn: OTP_TTL_SECONDS,
       resendAfter: OTP_MIN_DELAY_SECONDS,
@@ -101,7 +100,7 @@ export class UserService {
         ok: false,
         status: 401,
         code: 'INVALID_OR_EXPIRED_OTP',
-        message: this.i18n.t('validation.INVALID_OR_EXPIRED_OTP'),
+        message: "The code is invalid, expired, or already used.",
       };
       if (!user) return invalid;
       const state = await otps.findOneBy({ userId: user.id });
@@ -135,14 +134,14 @@ export class UserService {
     if (user.isProfileExists) {
       return {
         ...common,
-        message: this.i18n.t('validation.LOGIN_SUCCESSFUL'),
+        message: "Login successful.",
         nextStep: 'dashboard',
         accessToken: issued.token,
       };
     }
     return {
       ...common,
-      message: this.i18n.t('validation.EMAIL_VERIFIED_COMPLETE_PROFILE'),
+      message: "Email verified. Complete your profile.",
       nextStep: 'signup',
       signupToken: issued.token,
     };
@@ -150,7 +149,7 @@ export class UserService {
 
   async createUser(userId: string, dto: CreateUserDto) {
     if (dto.dateOfBirth > new Date().toISOString().slice(0, 10)) {
-      throw new BadRequestException(this.i18n.t('validation.DATE_OF_BIRTH_FUTURE'));
+      throw new BadRequestException("Date of birth cannot be in the future.");
     }
     const user = await this.dataSource.transaction(async (manager) => {
       const users = manager.getRepository(User);
@@ -158,8 +157,8 @@ export class UserService {
         where: { id: userId },
         lock: { mode: 'pessimistic_write' },
       });
-      if (!user?.isEmailVerified) throw new UnauthorizedException(this.i18n.t('validation.EMAIL_NOT_VERIFIED'));
-      if (user.isProfileExists) throw new ConflictException(this.i18n.t('validation.PROFILE_EXISTS'));
+      if (!user?.isEmailVerified) throw new UnauthorizedException("Please verify your email first.");
+      if (user.isProfileExists) throw new ConflictException("Profile already exists.");
       // Identity comes from the verified token. The body cannot set email or flags.
       user.fullName = dto.fullName;
       user.dateOfBirth = dto.dateOfBirth;
@@ -172,7 +171,7 @@ export class UserService {
     });
     const issued = await this.authService.issue(user.id, 'access');
     return {
-      message: i18nValidationMessage("validation.PROFILE_CREATED"),
+      message: "Profile created successfully.",
       isEmailVerified: user.isEmailVerified,
       isProfileExists: user.isProfileExists,
       accessToken: issued.token,
@@ -193,9 +192,9 @@ export class UserService {
       },
       { profilePhoto: jpeg, profilePhotoUrl: '/user/profile-photo' },
     );
-    if (!result.affected) throw new ForbiddenException(this.i18n.t('validation.COMPLETED_PROFILE_REQUIRED'));
+    if (!result.affected) throw new ForbiddenException("A completed profile is required.");
     return {
-      message: i18nValidationMessage("validation.PROFILE_UPDATED"),
+      message: "Profile updated successfully.",
       isEmailVerified: true,
       isProfileExists: true,
       profilePhotoUrl: '/user/profile-photo',
@@ -210,7 +209,7 @@ export class UserService {
       .addSelect('user.profilePhoto')
       .where('user.id = :userId', { userId })
       .getOne();
-    if (!user?.profilePhoto) throw new NotFoundException(this.i18n.t('validation.NO_PROFILE_PHOTO_UPLOADED'));
+    if (!user?.profilePhoto) throw new NotFoundException("No profile photo has been uploaded.");
     return user.profilePhoto;
   }
 
