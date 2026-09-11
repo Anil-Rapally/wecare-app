@@ -1,0 +1,23 @@
+{
+    "EMAIL_REQUIRED": "कृपया अपना ईमेल पता दर्ज करें",
+    "EMAIL_INVALID": "कृपया एक मान्य ईमेल पता दर्ज करें",
+    "ENTER_NAME": "कृपया अपना नाम दर्ज करें",
+    "SELECT_DOB": "कृपया अपनी जन्म तिथि चुनें",
+    "SELECT_GENDER": "कृपया अपना लिंग चुनें",
+    "SELECT_BLOOD_GROUP": "कृपया अपना रक्त समूह चुनें",
+    "ENTER_EMERGENCY_CONTACT": "कृपया आपातकालीन संपर्क नंबर दर्ज करें",
+    "OTP_FAILED": "OTP भेजने में विफल। कृपया बाद में प्रयास करें।",
+    "INVALID_OR_EXPIRED_OTP": "कोड अमान्य, समाप्त हो गया है, या पहले ही उपयोग हो चुका है।",
+    "PROFILE_CREATED": "प्रोफ़ाइल सफलतापूर्वक बनाई गई।",
+    "PROFILE_UPDATED": "प्रोफ़ाइल सफलतापूर्वक अपडेट की गई।",
+    "DATE_OF_BIRTH_FUTURE": "जन्म की तारीख भविष्य में नहीं हो सकती।",
+    "EMAIL_NOT_VERIFIED": "कृपया पहले अपना ईमेल सत्यापित करें।",
+    "PROFILE_EXISTS": "प्रोफ़ाइल पहले ही मौजूद है।",
+    "COMPLETED_PROFILE_REQUIRED": "पूर्ण प्रोफ़ाइल आवश्यक है।",
+    "NO_PROFILE_PHOTO_UPLOADED": "कोई प्रोफ़ाइल फोटो अपलोड नहीं किया गया है।",
+    "OTP_SENT": "OTP आपके ईमेल पर भेज दिया गया है।",
+    "LOGIN_SUCCESSFUL": "लॉगिन सफल।",
+    "EMAIL_VERIFIED_COMPLETE_PROFILE": "ईमेल सत्यापित। प्रोफ़ाइल पूरा करें।",
+    "UPLOAD_PHOTO_SIZE": "2MB से अधिक बड़ा चित्र अपलोड न करें",
+    "UPLOAD_PHOTO_FORMAT": "एक मान्य, बिना-एनिमेशन वाली JPEG, PNG या WebP इमेज अपलोड करें (अधिकतम 16 मेगापिक्सल)।"
+}

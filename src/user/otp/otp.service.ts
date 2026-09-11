@@ -9,6 +9,7 @@ import {
   OTP_TTL_SECONDS,
 } from './otp.types';
 
+
 const FAILURE_WINDOW_MS = 15 * 60 * 1000;
 
 function blocked(until: Date, now: number): OtpFailure {
@@ -105,7 +106,7 @@ export function checkOtp(
     ok: false,
     status: 401,
     code: 'INVALID_OR_EXPIRED_OTP',
-    message: 'The code is invalid, expired, or already used.',
+    message: 'The code is invalid, expired, or already used',
   };
   if (
     !state.codeHash ||

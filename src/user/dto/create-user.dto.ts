@@ -3,6 +3,7 @@ import { Transform } from 'class-transformer';
 import type { TransformFnParams } from 'class-transformer';
 import { IsNotEmpty, IsOptional, IsString, MaxLength, ValidateBy } from 'class-validator';
 import { BloodGroup, Gender } from '../entity/user.entity';
+import { i18nValidationMessage } from 'nestjs-i18n';
 
 const trim = ({ value }: TransformFnParams): unknown =>
   typeof value === 'string' ? value.trim() : value;
@@ -13,7 +14,7 @@ const IsLengthWhenProvided = (min: number, max: number) =>
     validator: {
       validate: (value: unknown): boolean =>
         value === '' || (typeof value === 'string' && value.length >= min && value.length <= max),
-      defaultMessage: (_args) => ' ',
+      defaultMessage: (_args) => '',
     },
   });
 
@@ -30,12 +31,12 @@ const IsDateWhenProvided = () =>
     },
   });
 
-const IsEnumWhenProvided = (values: object) =>
+const IsEnumWhenProvided = (values: object, message: string) =>
   ValidateBy({
     name: 'isEnumWhenProvided',
     validator: {
       validate: (value: unknown): boolean => value === '' || Object.values(values).includes(value),
-      defaultMessage: () => 'The value must be a valid enum member',
+      defaultMessage: () => message,
     },
   });
 
@@ -52,34 +53,37 @@ const MatchesWhenProvided = (pattern: RegExp, message: string) =>
 export class CreateUserDto {
   @Transform(trim)
   @IsString()
-  @IsNotEmpty({ message: 'Please enter your name' })
+  @IsNotEmpty({ message: i18nValidationMessage('validation.ENTER_NAME') })
   @IsLengthWhenProvided(2, 100)
   fullName!: string;
 
+  @Transform(trim)
   @IsDateWhenProvided()
-  @IsNotEmpty({ message: 'Select date of birth' })
+  @IsNotEmpty({ message: i18nValidationMessage('validation.SELECT_DOB') })
   dateOfBirth!: string;
 
   @ApiProperty({
     enum: Gender,
     example: Gender.MALE,
   })
-  @IsEnumWhenProvided(Gender)
-  @IsNotEmpty({ message: 'Select your gender' })
+  @Transform(trim)
+  @IsEnumWhenProvided(Gender, '')
+  @IsNotEmpty({ message: i18nValidationMessage('validation.SELECT_GENDER') })
   gender!: Gender;
 
   @ApiProperty({
     enum: BloodGroup,
     example: BloodGroup.O_POSITIVE,
   })
-  @IsEnumWhenProvided(BloodGroup)
-  @IsNotEmpty({ message: 'Select blood group' })
+  @Transform(trim)
+  @IsEnumWhenProvided(BloodGroup, '')
+  @IsNotEmpty({ message: i18nValidationMessage('validation.SELECT_BLOOD_GROUP') })
   bloodGroup!: BloodGroup;
 
   @Transform(trim)
   @IsString()
   @MatchesWhenProvided(/^\+?[1-9]\d{7,14}$/, '')
-  @IsNotEmpty({ message: 'Please enter emergency contact number' })
+  @IsNotEmpty({ message: i18nValidationMessage('validation.ENTER_EMERGENCY_CONTACT') })
   emergencyContact!: string;
 
   @IsOptional()

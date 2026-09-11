@@ -5,6 +5,8 @@ import { validateEnvironment, databaseOptions } from './common/config/environmen
 import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { I18nModule, AcceptLanguageResolver, I18nJsonLoader } from 'nestjs-i18n';
+import { join } from 'node:path';
 
 @Module({
   imports: [
@@ -14,8 +16,19 @@ import { AppService } from './app.service';
       useFactory: (_config: ConfigService) => databaseOptions(),
     }),
     UserModule,
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loader: I18nJsonLoader,
+      loaderOptions: {
+        path: join(__dirname, 'common', 'i18n'),
+        watch: true,
+      },
+      resolvers: [
+        AcceptLanguageResolver,
+      ],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

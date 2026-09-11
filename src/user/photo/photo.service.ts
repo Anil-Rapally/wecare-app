@@ -1,13 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import sharp from 'sharp';
+import { I18nService } from 'nestjs-i18n';
 
 export const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
 
 @Injectable()
 export class PhotoService {
+  constructor(
+    private readonly i18n: I18nService,
+  ) { }
   async sanitize(buffer: Buffer): Promise<Buffer> {
     if (!buffer?.length || buffer.length > MAX_PHOTO_BYTES) {
-      throw new BadRequestException('Upload an image no larger than 2 MiB.');
+      throw new BadRequestException(this.i18n.t('validation.UPLOAD_PHOTO_SIZE'));
     }
     try {
       const image = sharp(buffer, { limitInputPixels: 16_000_000, failOn: 'error' });
@@ -25,9 +29,7 @@ export class PhotoService {
         .jpeg({ quality: 85 })
         .toBuffer();
     } catch {
-      throw new BadRequestException(
-        'Upload a valid, non-animated JPEG, PNG, or WebP image (maximum 16 megapixels).',
-      );
+      throw new BadRequestException(this.i18n.t('validation.UPLOAD_PHOTO_FORMAT'));
     }
   }
 }

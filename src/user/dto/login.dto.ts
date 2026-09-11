@@ -3,9 +3,10 @@ import { Transform } from 'class-transformer';
 import type { TransformFnParams } from 'class-transformer';
 import { IsNotEmpty, MaxLength, ValidateBy, isEmail } from 'class-validator';
 import type { ValidationOptions } from 'class-validator';
+import { i18nValidationMessage } from 'nestjs-i18n';
 
-const IsEmailWhenProvided = (validationOptions?: ValidationOptions) =>
-  ValidateBy(
+const IsEmailWhenProvided = (validationOptions?: ValidationOptions): PropertyDecorator => {
+  return ValidateBy(
     {
       name: 'isEmailWhenProvided',
       validator: {
@@ -16,6 +17,7 @@ const IsEmailWhenProvided = (validationOptions?: ValidationOptions) =>
     },
     validationOptions,
   );
+}
 
 export class LoginDto {
   // This app treats emails case-insensitively; '+' and dots are preserved
@@ -26,8 +28,8 @@ export class LoginDto {
     example: 'user@example.com',
     description: 'User email address',
   })
-  @IsEmailWhenProvided()
-  @IsNotEmpty({ message: 'Please enter your email address' })
+  @IsEmailWhenProvided({ message: i18nValidationMessage('validation.EMAIL_INVALID') })
+  @IsNotEmpty({ message: i18nValidationMessage('validation.EMAIL_REQUIRED') })
   @MaxLength(250)
   email!: string;
 }

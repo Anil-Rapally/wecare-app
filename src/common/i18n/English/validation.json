@@ -1,0 +1,23 @@
+{
+    "EMAIL_REQUIRED": "Please enter your email address",
+    "EMAIL_INVALID": "Please enter a valid email address",
+    "ENTER_NAME": "Please enter your name",
+    "SELECT_DOB": "Select date of birth",
+    "SELECT_GENDER": "Select your gender",
+    "SELECT_BLOOD_GROUP": "Select blood group",
+    "ENTER_EMERGENCY_CONTACT": "Please enter emergency contact number",
+    "OTP_FAILED": "Failed to send OTP. Please try again later.",
+    "INVALID_OR_EXPIRED_OTP": "The code is invalid, expired, or already used.",
+    "PROFILE_CREATED": "Profile created successfully",
+    "PROFILE_UPDATED": "Profile updated successfully",
+    "DATE_OF_BIRTH_FUTURE": "Date of birth cannot be in the future.",
+    "EMAIL_NOT_VERIFIED": "Please verify your email first.",
+    "PROFILE_EXISTS": "Profile already exists.",
+    "COMPLETED_PROFILE_REQUIRED": "A completed profile is required.",
+    "NO_PROFILE_PHOTO_UPLOADED": "No profile photo has been uploaded.",
+    "OTP_SENT": "OTP sent to your email.",
+    "LOGIN_SUCCESSFUL": "Login successful.",
+    "EMAIL_VERIFIED_COMPLETE_PROFILE": "Email verified. Complete your profile.",
+    "UPLOAD_PHOTO_SIZE": "Upload an image no larger than 2 MiB.",
+    "UPLOAD_PHOTO_FORMAT": "Upload a valid, non-animated JPEG, PNG, or WebP image (maximum 16 megapixels)."
+}
