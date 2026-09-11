@@ -1,0 +1,48 @@
+{
+  "REPORT_NAME_REQUIRED": "report_name should not be empty",
+  "REPORT_NAME_STRING": "report_name must be a string",
+  "REPORT_NAME_MIN": "report_name must be at least 2 characters",
+  "REPORT_NAME_MAX": "report_name must not exceed 40 characters",
+  "REPORT_NAME_TEXT": "report_name must contain text",
+
+  "REPORT_TYPE_REQUIRED": "report_type should not be empty",
+  "REPORT_TYPE_STRING": "report_type must be a string",
+  "REPORT_TYPE_MIN": "report_type must be at least 2 characters",
+  "REPORT_TYPE_MAX": "report_type must not exceed 40 characters",
+  "REPORT_TYPE_TEXT": "report_type must contain text",
+
+  "REPORT_DATE_REQUIRED": "report_date should not be empty",
+  "REPORT_DATE_INVALID": "report_date must be a valid date",
+
+  "HOSPITAL_REQUIRED": "hospital_or_diagnostic_center should not be empty",
+  "HOSPITAL_STRING": "hospital_or_diagnostic_center must be a string",
+  "HOSPITAL_MIN": "hospital_or_diagnostic_center must be at least 2 characters",
+  "HOSPITAL_MAX": "hospital_or_diagnostic_center must not exceed 100 characters",
+  "HOSPITAL_TEXT": "hospital_or_diagnostic_center must contain text",
+
+  "DOCTOR_REQUIRED": "doctor_name should not be empty",
+  "DOCTOR_STRING": "doctor_name must be a string",
+  "DOCTOR_MIN": "doctor_name must be at least 2 characters",
+  "DOCTOR_MAX": "doctor_name must not exceed 60 characters",
+  "DOCTOR_TEXT": "doctor_name must contain text",
+
+  "TAGS_STRING": "tags must be a string",
+  "TAGS_MIN": "tags must be at least 2 characters",
+  "TAGS_MAX": "tags must not exceed 255 characters",
+  "TAGS_TEXT": "tags must contain text",
+
+  "NEW_COLLECTION_NAME_STRING": "new_collection_name must be a string",
+  "NEW_COLLECTION_NAME_MIN": "new_collection_name must be at least 2 characters",
+  "NEW_COLLECTION_NAME_MAX": "new_collection_name must not exceed 40 characters",
+  "NEW_COLLECTION_NAME_TEXT": "new_collection_name must contain text",
+
+  "PAGE_INTEGER": "page must be an integer",
+  "PAGE_MIN": "page must be at least 1",
+
+  "LIMIT_INTEGER": "limit must be an integer",
+  "LIMIT_MIN": "limit must be at least 1",
+  "LIMIT_MAX": "limit must not be greater than 100",
+
+  "SEARCH_STRING": "search must be a string",
+  "SEARCH_TEXT": "search must contain text"
+}

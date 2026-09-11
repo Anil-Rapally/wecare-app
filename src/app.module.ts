@@ -10,10 +10,24 @@ import { UserModule } from './user/user.module';
 import { CollectionModule } from './collections/collection.module';
 import { ReportModule } from './reports/report.module';
 
+import{I18nModule,QueryResolver} from 'nestjs-i18n';
+import * as path from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: {
+      path: path.join(__dirname, 'i18n'),
+      watch: true,
+    },
+    resolvers: [
+      { use: QueryResolver, options: ['lang'] },
+    ],
     }),
 
     TypeOrmModule.forRoot({

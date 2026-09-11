@@ -1,31 +1,44 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import {
+  I18nValidationExceptionFilter,
+  I18nValidationPipe,
+} from 'nestjs-i18n';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-    app.useGlobalPipes(
-    new ValidationPipe({
+ app.useGlobalPipes(
+  new I18nValidationPipe({
     transform: true,
+    stopAtFirstError: false,
+  }),
+);
 
-    exceptionFactory: (errors) => {
-      const messages = errors.flatMap((error) => {
-        const value = error.value;
+app.useGlobalFilters(
+  new I18nValidationExceptionFilter({
+    errorFormatter: (errors) => {
+      return errors.flatMap((error) => {
+        const constraints = error.constraints ?? {};
 
-        if (value === undefined || value === null || value === '') {
-          return `${error.property} should not be empty`;
+        if (
+          (error.value === undefined ||
+            error.value === null ||
+            error.value === '') &&
+          constraints.isNotEmpty
+        ) {
+          return [constraints.isNotEmpty];
         }
 
-        return Object.values(error.constraints ?? {});
-      });
+         if (constraints.isInt) {
+      return [constraints.isInt];
+    }
 
-      return new BadRequestException(messages);
+        return Object.values(constraints).slice(0, 1);
+      });
     },
   }),
 );
-  
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
